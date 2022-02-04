@@ -1,0 +1,2 @@
+contractAddress = ''; // testnet
+contractABI = []
