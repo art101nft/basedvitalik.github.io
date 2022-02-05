@@ -61,9 +61,9 @@
             <!-- <div style="margin-top: 16px;"></div> -->
             <div id="mintForm" class="hidden">
               <input type="number" step="1" name="amount" min="1" max="3" id="numberOfTokens">
-              </br>
+              <div style="margin-top: 8px"></div>
               <a id="mintButton" href="#">MINT</a>
-              </br>
+              <div style="margin-top: 8px"></div>
               <a href="" style="font-size: 12px;">refresh</a>
             </div>
             <i id="loading" class="fas fa-circle-notch fa-2x fa-spin hidden"></i>
@@ -86,18 +86,14 @@
           font-size: 2em;
           font-weight: bold;
           padding: 6px 8px;
-          background-color: #ee3024;
-        }
-
-        #mintButton:hover {
-          text-decoration: none;
           color: #ee3024;
           background-color: white;
         }
 
-        #mintButton, #mintButton:active, #mintButton:visited {
-          transition: background-color 1s ease-out;
-          transition: color 1s ease-out;
+        #mintButton:hover {
+          text-decoration: none;
+          color: white;
+          background-color: #ee3024;
         }
 
         .hidden {
