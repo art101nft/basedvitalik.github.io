@@ -98,7 +98,7 @@ async function updateMintStatus() {
     if (remaining < 0) {
       remaining = 0;
     }
-    updateMintMessage(`Wallet ${walletShort} is whitelisted for ${remaining} more Vitaliks (${dist.Amount} whitelisted, ${balance} minted). Sale price is currently: ${salePriceEth} ETH. </br><div style="margin-top: 16px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2>`);
+    updateMintMessage(`Wallet ${walletShort} is whitelisted for ${remaining} more Vitaliks (${dist.Amount} whitelisted, ${balance} minted). </br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
     if (dist.Amount - balance < 0) {
       document.getElementById('mintForm').classList.add('hidden');
       return false;
