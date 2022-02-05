@@ -1,48 +1,31 @@
 const isLive = false;
 
-window.addEventListener('DOMContentLoaded', () => {
-  const onboarding = new MetaMaskOnboarding();
-  const connectButtons = document.getElementsByClassName('ConnectMM');
-  const mintButtons = document.getElementsByClassName('mintZine');
-  const infoButtons = document.getElementsByClassName('getMintInfo');
+window.addEventListener('DOMContentLoaded', async () => {
   let accounts;
-  // Setup click triggers to onboard MetaMask
-  for(i = 0; i < connectButtons.length; i++) {
-    connectButtons[i].onclick = async () => {
-      if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-        onboarding.startOnboarding();
-      } else if (accounts && accounts.length > 0) {
-        onboarding.stopOnboarding();
-      }
+  const onboarding = new MetaMaskOnboarding();
+  const mintButton = document.getElementById('mintButton');
 
-      await getMMAccount();
-    };
+  if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+    onboarding.startOnboarding();
+  } else if (accounts && accounts.length > 0) {
+    onboarding.stopOnboarding();
   }
-  // Setup click triggers to mint
-  for(i = 0; i < mintButtons.length; i++) {
-    mintButtons[i].onclick = async () => {
-      await doit();
-    };
-  }
-  // Setup click triggers for mint info
-  for(i = 0; i < infoButtons.length; i++) {
-    infoButtons[i].onclick = async () => {
-      await getMintInfo();
-    };
-  }
+  await getMMAccount();
+  await updateMintStatus();
+
+  mintButton.onclick = async () => {
+    await _mint();
+  };
 });
 
-async function doit() {
+async function _mint() {
   try {
-    await mintZine();
+    await mintVitalik();
   } catch(e) {
-    if (e.message) {
-      loadFailedModal(e.message);
-    } else {
-      loadFailedModal(`Failed to mint! Check Javascript console logs for more detail and reach out on Discord for help. Error: ${e.toString()}`);
-    }
     console.log(e.toString());
     console.log(e);
+    document.getElementById('mintForm').classList.remove('hidden');
+    document.getElementById('loading').classList.add('hidden');
     return false;
   }
 }
@@ -53,19 +36,14 @@ async function getMMAccount() {
       method: 'eth_requestAccounts',
     });
     const account = accounts[0];
-    return account
+    return account;
   } catch(e) {
-    $('#NFTZineModalMint').modal('hide');
-    loadFailedModal(`Something went wrong. Refresh and try again.`)
+    updateMintMessage(`Something went wrong. Refresh and try again.`);
   }
 }
 
-function loadFailedModal(reason) {
-  setTimeout(function() {
-    $('#NFTZineModalMinting').modal('hide');
-    document.getElementById('failText').innerHTML = reason;
-    $('#NFTZineModalFailed').modal('show');
-  }, 1000);
+function updateMintMessage(reason) {
+  document.getElementById('mintMessage').innerHTML = reason;
 }
 
 async function getDistribution() {
@@ -84,11 +62,49 @@ async function getDistribution() {
     });
 }
 
-async function mintZine() {
+async function updateMintStatus() {
+  const w3 = new Web3(Web3.givenProvider || "http://127.0.0.1:7545");
+  const walletAddress = await getMMAccount();
+  const walletShort = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4)
+  const contract = new w3.eth.Contract(contractABI, contractAddress, {from: walletAddress});
+  const earlyAccessMode = await contract.methods.earlyAccessMode().call();
+  const salePrice = await contract.methods.salePrice().call();
+  const currentSupply = await contract.methods.totalSupply().call();
+  const maxSupply = await contract.methods.maxSupply().call();
+  const balance = await contract.methods.balanceOf(walletAddress).call();
+  const salePriceEth = w3.utils.fromWei(salePrice);
+  const mintingIsActive = await contract.methods.mintingIsActive().call();
+  const dist = await getDistribution();
+  if (!mintingIsActive) {
+    updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.`);
+    return false;
+  }
+  if (dist && earlyAccessMode) {
+    let remaining = dist.Amount - balance;
+    if (remaining < 0) {
+      remaining = 0;
+    }
+    updateMintMessage(`Wallet ${walletShort} is whitelisted for ${remaining} more Vitaliks (${dist.Amount} whitelisted, ${balance} minted). Sale price is currently: ${salePriceEth} ETH. ${currentSupply} / ${maxSupply} minted.`);
+    if (dist.Amount - balance < 0) {
+      document.getElementById('mintForm').classList.add('hidden');
+      return false;
+    }
+    document.getElementById('numberOfTokens').max = 25;
+    document.getElementById('numberOfTokens').value = remaining;
+    document.getElementById('mintForm').classList.remove('hidden');
+  } else if (!dist && earlyAccessMode) {
+    updateMintMessage(`Wallet ${walletShort} is not whitelisted. Check back during public minting.`);
+  } else if (!earlyAccessMode) {
+    updateMintMessage(`Public minting is live! ${currentSupply} / ${maxSupply} minted. Mint price is ${salePriceEth} ETH. Limit 3 per transaction.`);
+    document.getElementById('mintForm').classList.remove('hidden');
+  }
+}
+
+async function mintVitalik() {
   // First do nothing if MetaMask is on Mainnet and we're not live yet
   if (!isLive) {
     if (window.ethereum.chainId == "0x1") {
-      loadFailedModal(`Mainnet contracts not available yet. Try again later.`);
+      updateMintMessage(`Mainnet contracts not available yet. Try again later.`);
       return false;
     }
   }
@@ -100,11 +116,10 @@ async function mintZine() {
   const walletAddress = await getMMAccount();
   const gasPrice = await w3.eth.getGasPrice();
   let amountToMint = document.getElementById('numberOfTokens').value;
-  if (amountToMint <= 0 || amountToMint > 2 || isNaN(amountToMint)) {
+  if (amountToMint <= 0 || amountToMint > 20 || isNaN(amountToMint)) {
     amountToMint = 1;
+    document.getElementById('numberOfTokens').value = amountToMint;
   }
-
-  $('#NFTZineModalMinting').modal('show');
 
   // Define the contract we want to use
   const contract = new w3.eth.Contract(contractABI, contractAddress, {from: walletAddress});
@@ -112,26 +127,21 @@ async function mintZine() {
   // Check if we're in earlyAccessMode to do more checks
   const earlyAccessMode = await contract.methods.earlyAccessMode().call();
 
+  // Grab sale price
+  const salePrice = await contract.methods.salePrice().call();
+
   // Fail if sales are paused
   const mintingIsActive = await contract.methods.mintingIsActive().call();
   if (!mintingIsActive) {
-    loadFailedModal(`Sales are currently paused on this contract. Try again later.`);
-    return false;
-  }
-
-  // Fail if requested amount is more than max
-  let balance = await contract.methods.balanceOf(walletAddress).call();
-  let maxAmount = await contract.methods.maxMints().call();
-  if (Number(balance) + Number(amountToMint) > maxAmount) {
-    loadFailedModal(`Requesting ${amountToMint} would put you over the maximum amount of 2 per address since you currently have a balance of ${balance} NFTZines.`)
+    updateMintMessage(`Sales are currently paused on this contract. Try again later.`);
     return false;
   }
 
   // Fail if requested amount would exceed supply
-  let currentSupply = await contract.methods.tokensMinted().call();
+  let currentSupply = await contract.methods.totalSupply().call();
   let maxSupply = await contract.methods.maxSupply().call();
   if (Number(currentSupply) + Number(amountToMint) > Number(maxSupply)) {
-    loadFailedModal(`Requesting ${amountToMint} would exceed the maximum token supply of ${maxSupply}. Current supply is ${currentSupply}, so try minting ${maxSupply - currentSupply}.`)
+    updateMintMessage(`Requesting ${amountToMint} would exceed the maximum token supply of ${maxSupply}. Current supply is ${currentSupply}, so try minting ${maxSupply - currentSupply}.`)
     return false;
   }
 
@@ -140,55 +150,64 @@ async function mintZine() {
     // Get the merkle tree distribution info for the user
     const dist = await getDistribution();
     if (!dist) {
-      loadFailedModal(`Minting is currently only for holders of Art101 NFTs and/or users of Patrn.me. Your wallet address is not on the whitelist. Come back when public minting has started.`);
+      updateMintMessage(`Minting is currently only for holders of Non-Fungible Soup NFTs. Your wallet address is not on the whitelist. Come back when public minting has started.`);
       return false;
     }
 
     // Fail if the merkle root hash is not set
-    const merkleSet = await contract.methods.isMerkleSet().call();
+    const merkleSet = await contract.methods.merkleSet().call();
     if (!merkleSet) {
-      loadFailedModal(`Admin has not setup the contract properly yet: No merkle root hash is set`);
-      return false;
-    }
-
-    // Fail if randPrime is not set yet
-    const randPrime = await contract.methods.randPrime().call();
-    if (randPrime == 0) {
-      loadFailedModal(`Admin has not setup the contract properly yet: No random prime number set`);
+      updateMintMessage(`Admin has not setup the contract properly yet: No merkle root hash is set`);
       return false;
     }
 
     // Estimate gas limit
-    await contract.methods.mintZines(dist.Index, walletAddress, Number(dist.Amount), dist.Proof, amountToMint).estimateGas(function(err, gas){
+    await contract.methods.mintVitaliks(dist.Index, walletAddress, Number(dist.Amount), dist.Proof, amountToMint).estimateGas({from: walletAddress, value: salePrice * amountToMint}, function(err, gas){
       gasLimit = gas;
     });
 
-    // Attempt minting for
+    // Show loading icon
+    document.getElementById('mintForm').classList.add('hidden');
+    document.getElementById('loading').classList.remove('hidden');
+
+    // Attempt minting
     console.log(`Attempting to mint ${amountToMint} tokens with gas limit of ${gasLimit} gas and gas price of ${gasPrice}`);
-    res = await contract.methods.mintZines(dist.Index, walletAddress, Number(dist.Amount), dist.Proof, amountToMint).send({
+    res = await contract.methods.mintVitaliks(dist.Index, walletAddress, Number(dist.Amount), dist.Proof, amountToMint).send({
       from: walletAddress,
-      value: 0,
+      value: salePrice * amountToMint,
       gasPrice: gasPrice,
       gas: gasLimit
     });
     console.log(res);
   } else {
+    // Estimate gas limit
+    await contract.methods.mintVitaliks(0, walletAddress, 0, [], amountToMint).estimateGas({from: walletAddress, value: salePrice * amountToMint}, function(err, gas){
+      gasLimit = gas;
+    });
+
+    // Show loading icon
+    document.getElementById('mintForm').classList.add('hidden');
+    document.getElementById('loading').classList.remove('hidden');
+
     // If not in earlyAccessMode, we can just use empty amounts in func
     console.log(`Attempting to mint ${amountToMint}`);
-    res = await contract.methods.mintZines(0, walletAddress, 0, [], amountToMint).send({
+    res = await contract.methods.mintVitaliks(0, walletAddress, 0, [], amountToMint).send({
       from: walletAddress,
-      value: 0,
+      value: salePrice * amountToMint,
       gasPrice: gasPrice,
-      gas: gasLimit * amountToMint
+      gas: gasLimit
     });
     console.log(res);
   }
 
+  document.getElementById('mintForm').classList.remove('hidden');
+  document.getElementById('loading').classList.add('hidden');
+
   if (res.status) {
-    loadModal = '#NFTZineModalSuccess';
+    updateMintMessage('Success! Head to <a href="https://opensea.io/account">OpenSea</a> to see your NFT!');
+    document.getElementById('mintForm').innerHTML = `<a href="https://etherscan.io/search?f=0&q=${res.transactionHash}">Etherscan</a> <a href="">Mint More</a>`;
   } else {
-    loadModal = '#NFTZineModalFailed';
+    updateMintMessage('FAILED!');
+    document.getElementById('mintForm').innerHTML = `<a href="">Try Again</a>`;
   }
-  $('#NFTZineModalMinting').modal('hide');
-  $(loadModal).modal('show');
 }
