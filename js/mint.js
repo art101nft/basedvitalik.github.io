@@ -10,6 +10,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   } else if (accounts && accounts.length > 0) {
     onboarding.stopOnboarding();
   }
+  await switchNetwork();
   await getMMAccount();
   await updateMintStatus();
 
@@ -60,6 +61,19 @@ async function getDistribution() {
       }
       return distr;
     });
+}
+
+async function switchNetwork(){
+  let chainId;
+  if (!isLive) {
+    chainId = '0x3';
+  } else {
+    chainId = '0x1';
+  }
+  await ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: chainId }],
+  });
 }
 
 async function updateMintStatus() {
