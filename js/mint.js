@@ -161,6 +161,13 @@ async function mintVitalik() {
       return false;
     }
 
+    // Fail if the amountToMint is more than allowed
+    const balance = await contract.methods.balanceOf(walletAddress).call();
+    if (Number(Number(amountToMint) + Number(balance)) > Number(dist.Amount)) {
+      updateMintMessage(`Cannot mint more than your whitelisted amount of ${dist.Amount}. You already have ${balance}.`);
+      return false;
+    }
+
     // Estimate gas limit
     await contract.methods.mintVitaliks(dist.Index, walletAddress, Number(dist.Amount), dist.Proof, amountToMint).estimateGas({from: walletAddress, value: salePrice * amountToMint}, function(err, gas){
       gasLimit = gas;
@@ -169,6 +176,7 @@ async function mintVitalik() {
     // Show loading icon
     document.getElementById('mintForm').classList.add('hidden');
     document.getElementById('loading').classList.remove('hidden');
+    updateMintMessage('');
 
     // Attempt minting
     console.log(`Attempting to mint ${amountToMint} tokens with gas limit of ${gasLimit} gas and gas price of ${gasPrice}`);
@@ -188,6 +196,7 @@ async function mintVitalik() {
     // Show loading icon
     document.getElementById('mintForm').classList.add('hidden');
     document.getElementById('loading').classList.remove('hidden');
+    updateMintMessage('');
 
     // If not in earlyAccessMode, we can just use empty amounts in func
     console.log(`Attempting to mint ${amountToMint}`);

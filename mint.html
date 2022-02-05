@@ -57,13 +57,14 @@
         <img src="img/logo.svg" id="logo" class="img-fluid"/>
         <div style="margin-top: 24px;"></div>
         <div class="col-xs-8 col-sm-8 col-md-6 col-lg=4 col-xl-4 text-center w-75"  style="background-color: #ee3024; color:white; padding: 16px;">
-            <h5 style="color:white;"><b id="mintMessage"></b></h5>
-            <div style="margin-top: 16px;"></div>
+            <h5 style="color:white;"><b id="mintMessage"><i id="loading" class="fas fa-circle-notch fa-2x fa-spin"></i></b></h5>
+            <!-- <div style="margin-top: 16px;"></div> -->
             <div id="mintForm" class="hidden">
               <input type="number" step="1" name="amount" min="1" max="3" id="numberOfTokens">
               </br>
               <a id="mintButton" href="#">MINT</a>
               </br>
+              <a href="" style="font-size: 12px;">refresh</a>
             </div>
             <i id="loading" class="fas fa-circle-notch fa-2x fa-spin hidden"></i>
         </div>
@@ -76,6 +77,8 @@
           text-align: center;
           width: 4em;
           font-size: 2em;
+          border: 1px solid white;
+          margin: 6px;
         }
 
         #mintButton {
