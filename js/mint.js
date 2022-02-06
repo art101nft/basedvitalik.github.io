@@ -17,16 +17,25 @@ window.addEventListener('DOMContentLoaded', async () => {
   mintButton.onclick = async () => {
     await _mint();
   };
+
+  ethereum.on('accountsChanged', function (accounts) {
+    window.location.href = '';
+  })
 });
 
 async function _mint() {
   try {
     await mintVitalik();
   } catch(e) {
-    console.log(e.toString());
-    console.log(e);
+    // console.log(e)
+    if (e.message) {
+      alert(e.message);
+    } else {
+      alert(e.toString());
+    }
     document.getElementById('mintForm').classList.remove('hidden');
     document.getElementById('loading').classList.add('hidden');
+    await updateMintStatus();
     return false;
   }
 }
@@ -99,7 +108,7 @@ async function updateMintStatus() {
       remaining = 0;
     }
     updateMintMessage(`Wallet ${walletShort} is whitelisted for ${remaining} more Vitaliks (${dist.Amount} whitelisted, ${balance} minted). </br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
-    if (dist.Amount - balance < 0) {
+    if (remaining == 0) {
       document.getElementById('mintForm').classList.add('hidden');
       return false;
     }
@@ -109,7 +118,7 @@ async function updateMintStatus() {
   } else if (!dist && earlyAccessMode) {
     updateMintMessage(`Wallet ${walletShort} is not whitelisted. Check back during public minting.`);
   } else if (!earlyAccessMode) {
-    updateMintMessage(`Public minting is live! ${currentSupply} / ${maxSupply} minted. Mint price is ${salePriceEth} ETH. Limit 3 per transaction.`);
+    updateMintMessage(`Public minting is live! Limit 3 per transaction.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
     document.getElementById('mintForm').classList.remove('hidden');
   }
 }
@@ -227,8 +236,8 @@ async function mintVitalik() {
   document.getElementById('loading').classList.add('hidden');
 
   if (res.status) {
-    updateMintMessage('Success! Head to <a href="https://opensea.io/account">OpenSea</a> to see your NFT!');
-    document.getElementById('mintForm').innerHTML = `<a href="https://etherscan.io/search?f=0&q=${res.transactionHash}">Etherscan</a> <a href="">Mint More</a>`;
+    updateMintMessage('Success! Head to <a href="https://opensea.io/account?search[resultModel]=ASSETS&search[sortBy]=LAST_TRANSFER_DATE&search[sortAscending]=false">OpenSea</a> to see your NFTs!');
+    document.getElementById('mintForm').innerHTML = `<a href="https://etherscan.io/tx/${res.transactionHash}">Etherscan</a>`;
   } else {
     updateMintMessage('FAILED!');
     document.getElementById('mintForm').innerHTML = `<a href="">Try Again</a>`;
