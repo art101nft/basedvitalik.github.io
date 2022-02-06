@@ -118,7 +118,7 @@ async function updateMintStatus() {
   } else if (!dist && earlyAccessMode) {
     updateMintMessage(`Wallet ${walletShort} is not whitelisted. Check back during public minting.`);
   } else if (!earlyAccessMode) {
-    updateMintMessage(`Public minting is live! Limit 3 per transaction.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
+    updateMintMessage(`Public minting is live! Limit 5 per transaction.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
     document.getElementById('mintForm').classList.remove('hidden');
   }
 }
