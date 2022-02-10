@@ -75,7 +75,7 @@ async function getDistribution() {
 async function switchNetwork(){
   let chainId;
   if (!isLive) {
-    chainId = '0x3';
+    chainId = '0x4';
   } else {
     chainId = '0x1';
   }
@@ -124,12 +124,16 @@ async function updateMintStatus() {
 }
 
 async function mintVitalik() {
+  let etherscan_uri = 'etherscan.io';
+  let opensea_uri = 'opensea.io';
   // First do nothing if MetaMask is on Mainnet and we're not live yet
   if (!isLive) {
     if (window.ethereum.chainId == "0x1") {
       updateMintMessage(`Mainnet contracts not available yet. Try again later.`);
       return false;
     }
+    etherscan_uri = 'rinkeby.etherscan.io';
+    opensea_uri = 'testnets.opensea.io';
   }
 
   let res;
@@ -236,8 +240,8 @@ async function mintVitalik() {
   document.getElementById('loading').classList.add('hidden');
 
   if (res.status) {
-    updateMintMessage('Success! Head to <a href="https://opensea.io/account?search[resultModel]=ASSETS&search[sortBy]=LAST_TRANSFER_DATE&search[sortAscending]=false">OpenSea</a> to see your NFTs!');
-    document.getElementById('mintForm').innerHTML = `<a href="https://etherscan.io/tx/${res.transactionHash}">Etherscan</a>`;
+    updateMintMessage(`Success! Head to <a href="https://${opensea_uri}/account?search[resultModel]=ASSETS&search[sortBy]=LAST_TRANSFER_DATE&search[sortAscending]=false">OpenSea</a> to see your NFTs!`);
+    document.getElementById('mintForm').innerHTML = `<a href="https://${etherscan_uri}/tx/${res.transactionHash}">Etherscan</a>`;
   } else {
     updateMintMessage('FAILED!');
     document.getElementById('mintForm').innerHTML = `<a href="">Try Again</a>`;

@@ -1,4 +1,4 @@
-contractAddress = '0x9458dFAf5B9523606022733875B9889A29310e0A'; // testnet
+contractAddress = '0x34cCE940aCe0598C6E48A179a5C6438901938b3f'; // testnet
 contractABI = [
   {
     "inputs": [],
@@ -179,31 +179,6 @@ contractABI = [
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "operator",
-        "type": "address"
-      }
-    ],
-    "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -631,6 +606,31 @@ contractABI = [
         "internalType": "string",
         "name": "",
         "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_operator",
+        "type": "address"
+      }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isOperator",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
