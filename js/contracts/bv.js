@@ -1,7 +1,13 @@
-contractAddress = '0x34cCE940aCe0598C6E48A179a5C6438901938b3f'; // testnet
+contractAddress = '0x9fd8723086E718d154B919A4777833065F3B4770'; // testnet
 contractABI = [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_proxyRegistryAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -98,6 +104,20 @@ contractABI = [
     ],
     "name": "Transfer",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "_contractURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
     "inputs": [
@@ -304,6 +324,40 @@ contractABI = [
     "constant": true
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "proxyApproved",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "proxyRegistryAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -493,6 +547,20 @@ contractABI = [
   },
   {
     "inputs": [],
+    "name": "contractURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -515,12 +583,38 @@ contractABI = [
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "proxyAddress",
+        "type": "address"
+      }
+    ],
+    "name": "toggleProxyState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "string",
         "name": "URI",
         "type": "string"
       }
     ],
     "name": "setBaseURI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "URI",
+        "type": "string"
+      }
+    ],
+    "name": "setContractURI",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
