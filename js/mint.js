@@ -100,7 +100,12 @@ async function updateMintStatus() {
   const balance = await contract.methods.balanceOf(walletAddress).call();
   const salePriceEth = w3.utils.fromWei(salePrice);
   const mintingIsActive = await contract.methods.mintingIsActive().call();
+  const mintedOut = currentSupply == maxSupply;
   const dist = await getDistribution();
+  if (mintedOut) {
+    updateMintMessage(`That's all folks, supply is minted out! Check secondary markets to purchase a BASΞD VITALIK.<br><br><a href="https://opensea.io/collection/basedvitalik" target=_blank>Opensea</a>`);
+    return false;
+  }
   if (!mintingIsActive) {
     updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.`);
     return false;
