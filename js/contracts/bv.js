@@ -1,4 +1,4 @@
-contractAddress = '0x9fd8723086E718d154B919A4777833065F3B4770'; // testnet
+contractAddress = '0x499408fcE665A0De70f4C1594266804C36439715'; // testnet
 contractABI = [
   {
     "inputs": [
@@ -10,6 +10,76 @@ contractABI = [
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "ApprovalCallerNotOwnerNorApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ApprovalQueryForNonexistentToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ApprovalToCurrentOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ApproveToCaller",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "BalanceQueryForZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MintToZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MintZeroQuantity",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OwnerIndexOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "OwnerQueryForNonexistentToken",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TokenIndexOutOfBounds",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferCallerNotOwnerNorApproved",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferFromIncorrectOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferToNonERC721ReceiverImplementer",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferToZeroAddress",
+    "type": "error"
   },
   {
     "anonymous": false,
@@ -498,6 +568,65 @@ contractABI = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "from",
         "type": "address"
@@ -530,20 +659,6 @@ contractABI = [
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
   },
   {
     "inputs": [],

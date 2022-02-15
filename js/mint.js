@@ -94,6 +94,7 @@ async function updateMintStatus() {
   const salePrice = await contract.methods.salePrice().call();
   const currentSupply = await contract.methods.totalSupply().call();
   const maxSupply = await contract.methods.maxSupply().call();
+  const maxMints = await contract.methods.maxMints().call();
   const balance = await contract.methods.balanceOf(walletAddress).call();
   const salePriceEth = w3.utils.fromWei(salePrice);
   const mintingIsActive = await contract.methods.mintingIsActive().call();
@@ -118,7 +119,7 @@ async function updateMintStatus() {
   } else if (!dist && earlyAccessMode) {
     updateMintMessage(`Wallet ${walletShort} is not whitelisted. Check back during public minting.`);
   } else if (!earlyAccessMode) {
-    updateMintMessage(`Public minting is live! Limit 5 per transaction.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
+    updateMintMessage(`Public minting is live! Limit ${maxMints} per transaction.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
     document.getElementById('mintForm').classList.remove('hidden');
   }
 }
@@ -143,7 +144,7 @@ async function mintVitalik() {
   const walletAddress = await getMMAccount();
   const gasPrice = await w3.eth.getGasPrice();
   let amountToMint = document.getElementById('numberOfTokens').value;
-  if (amountToMint <= 0 || amountToMint > 20 || isNaN(amountToMint)) {
+  if (amountToMint <= 0 || isNaN(amountToMint)) {
     amountToMint = 1;
     document.getElementById('numberOfTokens').value = amountToMint;
   }
