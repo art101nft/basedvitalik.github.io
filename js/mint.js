@@ -13,8 +13,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   await switchNetwork();
   await getMMAccount();
   await updateMintStatus();
+  let _i = setInterval(updateMintStatus, 10000);
 
   mintButton.onclick = async () => {
+    clearInterval(_i);
     await _mint();
   };
 
