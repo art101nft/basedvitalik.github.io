@@ -120,7 +120,7 @@ async function updateMintStatus() {
       document.getElementById('mintForm').classList.add('hidden');
       return false;
     }
-    document.getElementById('numberOfTokens').max = 25;
+    document.getElementById('numberOfTokens').max = 50;
     document.getElementById('numberOfTokens').value = remaining;
     document.getElementById('mintForm').classList.remove('hidden');
   } else if (!dist && earlyAccessMode) {
