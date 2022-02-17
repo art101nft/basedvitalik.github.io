@@ -1,4 +1,4 @@
-contractAddress = '0x2129754110950E0f073a1702259f4Aa03767Ed76'; // testnet
+contractAddress = '0xA1bfFB14eAE0B58b53ad669a21094D611fE8Bcdf'; // mainnet
 contractABI = [
   {
     "inputs": [

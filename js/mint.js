@@ -1,4 +1,4 @@
-const isLive = false;
+const isLive = true;
 
 window.addEventListener('DOMContentLoaded', async () => {
   let accounts;
