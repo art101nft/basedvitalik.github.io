@@ -5,7 +5,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   const onboarding = new MetaMaskOnboarding();
   const mintButton = document.getElementById('mintButton');
 
-  if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+  // Offer to install MetaMask if it's not installed nor do we
+  // detect a replacement such as Coinbase wallet
+  if (!MetaMaskOnboarding.isMetaMaskInstalled() && !window.ethereum) {
+    alert('This site requires a browser wallet addon, such as Coinbase wallet or MetaMask. Redirecting you to a page to download MetaMask.');
     onboarding.startOnboarding();
   } else if (accounts && accounts.length > 0) {
     onboarding.stopOnboarding();
