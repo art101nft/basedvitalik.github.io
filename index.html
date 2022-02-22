@@ -56,11 +56,12 @@
 <div class="d-flex align-items-center flex-column justify-content-center h-100 w-100 previewbg">
   <img src="img/logo.svg" id="logo" class="img-fluid"/>
   <div style="margin-top: 24px;"></div>
-    <a href="#" style="display: none;"><img src="img/mint.svg" id="mint" class="img-fluid" /></a>
+    <a href="mint.html" style="display: none;" id="mintLink"><img src="img/mint.svg" id="mint" class="img-fluid" /></a>
     <div style="margin-top: 24px;"></div>
     <div class="col-xs-8 col-sm-8 col-md-6 col-lg=4 col-xl-4 text-center w-75"  style="background-color: #ee3024; color:white; padding: 16px;">
       <h3 class="" style="color:white; padding-top:8px;"><b>4962 Randomly Generated Based Vitalik<br class="d-none d-lg-block"> PFP NFTs Minting feb. 22nd.</b></h3>
-      <h3 id="countdown" style="background:white; color: #ee3024;"></h3>
+      <h3 id="presaleCountdown" style="background:white; color: #ee3024;"></h3>
+      <h3 id="publicsaleCountdown" style="background:white; color: #ee3024;"></h3>
       <h3  style="color:white;"><b>0.06 Ξ</b></h3>
       <h5 style="color:white;"><b>or Reserve an Early-Mint for .03 Ξ w/ <a href="https://opensea.io/collection/non-fungible-soup">Non-Fungible Soup</a>.</b></h5>
     <div style="margin-top: 16px;"></div>
@@ -116,18 +117,37 @@
 <script src="/js/plugins.js"></script>
 
 <script>
-  var countDownDate = new Date("2022-02-22T17:00:00.000-08:00").getTime();
+  var presaleCountdownDate = new Date("2022-02-22T17:00:00.000-08:00").getTime();
   var x = setInterval(function() {
     var now = new Date().getTime();
-    var distance = countDownDate - now;
+    var distance = presaleCountdownDate - now;
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("countdown").innerHTML = "<b>" + days + "d " + hours + "h "
+    document.getElementById("presaleCountdown").innerHTML = "<b>Pre-Sale: " + hours + "h "
     + minutes + "m " + seconds + "s " + "</b>";
     if (distance < 0) {
       clearInterval(x);
+      document.getElementById("presaleCountdown").innerHTML = '';
+      document.getElementById("mintLink").style.display = 'block';
+    }
+  }, 1000);
+
+  var publicsaleCountdownDate = new Date("2022-02-22T21:00:00.000-08:00").getTime();
+  var y = setInterval(function() {
+    var now = new Date().getTime();
+    var distance = publicsaleCountdownDate - now;
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("publicsaleCountdown").innerHTML = "<b>Public Sale: " + hours + "h "
+    + minutes + "m " + seconds + "s " + "</b>";
+    if (distance < 0) {
+      clearInterval(y);
+      document.getElementById("publicsaleCountdown").innerHTML = '';
+      document.getElementById("mintLink").style.display = 'block';
     }
   }, 1000);
 </script>

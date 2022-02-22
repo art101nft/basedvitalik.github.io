@@ -116,7 +116,7 @@ async function updateMintStatus() {
       updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.<br><br>Wallet ${walletShort} is whitelisted for ${dist.Amount} Vitaliks.`);
       return false;
     } else {
-      updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.`);
+      updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.<br><br>Wallet ${walletShort} is not whitelisted for any Vitaliks.`);
       return false;
     }
   }
