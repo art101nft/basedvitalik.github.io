@@ -1,4 +1,4 @@
-contractAddress = '0xA1bfFB14eAE0B58b53ad669a21094D611fE8Bcdf'; // mainnet
+contractAddress = '0xea2dc6f116a4C3d6a15F06b4E8AD582a07C3dD9C'; // mainnet
 contractABI = [
   {
     "inputs": [
@@ -242,6 +242,26 @@ contractABI = [
     "constant": true
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "earlyAccessMinted",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [],
     "name": "earlyAccessMode",
     "outputs": [
@@ -387,6 +407,20 @@ contractABI = [
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "placeholderMeta",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -691,6 +725,13 @@ contractABI = [
   {
     "inputs": [],
     "name": "toggleEarlyAccessMode",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "togglePlaceholder",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
