@@ -78,6 +78,10 @@ async function getDistribution() {
 }
 
 async function switchNetwork(){
+  // don't do this if no metamask (errors on coinbase wallet)
+  if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+    return false;
+  }
   let chainId;
   if (!isLive) {
     chainId = '0x4';
@@ -112,13 +116,8 @@ async function updateMintStatus() {
     return false;
   }
   if (!mintingIsActive) {
-    if (dist && earlyAccessMode && merkleSet) {
-      updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.<br><br>Wallet ${walletShort} is whitelisted for ${dist.Amount} Vitaliks.`);
-      return false;
-    } else {
-      updateMintMessage(`Minting is not active yet! Check back later. ${currentSupply} / ${maxSupply} minted.<br><br>Wallet ${walletShort} is not whitelisted for any Vitaliks.`);
-      return false;
-    }
+    updateMintMessage(`Minting is not active yet! Check back later. </br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
+    return false;
   }
   if (dist && earlyAccessMode) {
     let remaining = dist.Amount - earlyAccessMinted;
