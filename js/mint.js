@@ -116,8 +116,17 @@ async function updateMintStatus() {
     return false;
   }
   if (!mintingIsActive) {
-    updateMintMessage(`Minting is not active yet! Check back later. </br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
-    return false;
+    if (dist && earlyAccessMode && merkleSet) {
+      let remaining = dist.Amount - earlyAccessMinted;
+      if (remaining < 0) {
+        remaining = 0;
+      }
+      updateMintMessage(`Minting is not active yet! Check back later.<br><br>Wallet ${walletShort} is whitelisted for ${dist.Amount} Vitaliks. ${remaining} remaining.<div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
+      return false;
+    } else {
+      updateMintMessage(`Minting is not active yet! Check back later.<br><br>Wallet ${walletShort} is not whitelisted for any Vitaliks.</br><div style="margin-top: 8px"></div><h2><b>${currentSupply} / ${maxSupply} minted</b></h2><div style="margin-top: 8px"></div><h3><b>${salePriceEth} Ξ</b></h3>`);
+      return false;
+    }
   }
   if (dist && earlyAccessMode) {
     let remaining = dist.Amount - earlyAccessMinted;
