@@ -64,7 +64,7 @@ function updateMintMessage(reason) {
 async function getDistribution() {
   let distr;
   let account = await getMMAccount();
-  return await fetch('/distribution.json')
+  return await fetch('/distribution.json', {cache: 'no-cache'})
     .then((res) => res.json())
     .then(data => {
       for(addr in data) {
