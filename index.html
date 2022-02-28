@@ -60,7 +60,8 @@
     <a href="mint.html" style="display: none;" id="mintLink"><img src="img/mint.svg" id="mint" class="img-fluid" /></a>
     <div style="margin-top: 24px;"></div>
     <div class="col-xs-8 col-sm-8 col-md-6 col-lg=4 col-xl-4 text-center w-75"  style="background-color: #ee3024; color:white; padding: 16px;">
-      <h3 class="" style="color:white; padding-top:8px;"><b>4962 Unique Based Vitalik<br class="d-none d-lg-block"> PFP NFTs Minting FREE on Feb. 28th @ 8PM PST.</b></h3>
+      <h3 class="" style="color:white; padding-top:8px;"><b>4962 Unique Based Vitalik PFP NFTs Minting FREE on Feb. 28th @ 8PM PST.</b></h3>
+      <h3 id="presaleCountdown" style="background:white; color: #ee3024; margin-top:12px;"></h3>
       <h3 id="publicsaleCountdown" style="background:white; color: #ee3024; margin-top:12px;"></h3>
       <h3 class="" style="color:white; padding-top:8px;"><a href="https://medium.com/@Cartyisme/minting-out-money-f49282d07085"><b>Why FREE!?</b></a></h3>
       <h3  style="color:white;"><b>0.00 Ξ</b></h3>
@@ -126,11 +127,28 @@
     var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    document.getElementById("publicsaleCountdown").innerHTML = "<b>Public Sale: " + days + "d " + hours + "h "
+    document.getElementById("publicsaleCountdown").innerHTML = "<b>Public Minting: " + days + "d " + hours + "h "
     + minutes + "m " + seconds + "s " + "</b>";
     if (distance < 0) {
       clearInterval(y);
-      document.getElementById("publicsaleCountdown").innerHTML = '<b>Public Sale: Now!</b>';
+      document.getElementById("publicsaleCountdown").innerHTML = '<b>Public Minting: Now!</b>';
+      document.getElementById("mintLink").style.display = 'block';
+    }
+  }, 1000);
+
+  var presaleCountdownDate = new Date("2022-02-28T06:00:00.000-08:00").getTime();
+  var y = setInterval(function() {
+    var now = new Date().getTime();
+    var distance = presaleCountdownDate - now;
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("presaleCountdown").innerHTML = "<b>Early Minting: " + days + "d " + hours + "h "
+    + minutes + "m " + seconds + "s " + "</b>";
+    if (distance < 0) {
+      clearInterval(y);
+      document.getElementById("presaleCountdown").innerHTML = '<b>Early Minting: Now!</b>';
       document.getElementById("mintLink").style.display = 'block';
     }
   }, 1000);
